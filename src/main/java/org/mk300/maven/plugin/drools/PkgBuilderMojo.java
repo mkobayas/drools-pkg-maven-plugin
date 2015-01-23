@@ -42,7 +42,7 @@ import org.kie.api.definition.rule.Rule;
 import org.kie.api.runtime.KieContainer;
 
 /**
- * Echos an object string to the output screen.
+ * Generate Drools pkg file plugin.
  * 
  * @goal drools-pkg
  * @requiresDependencyResolution compile+runtime
@@ -58,7 +58,7 @@ public class PkgBuilderMojo extends AbstractMojo {
 			+ "</project>";
 	
 	/**
-	 * Any Object to print out.
+	 * The directory for rules base dir.
 	 * 
 	 * @parameter expression="${drools-pkg.ruleBaseDir}" default-value="src/main/resources"
 	 */
