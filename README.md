@@ -1,13 +1,9 @@
-# drools-pkg-maven-plugin
-
-
-## sample pom
-
     <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     	<modelVersion>4.0.0</modelVersion>
+
     	<groupId>org.mk300.example</groupId>
-    	<artifactId>my-drools-pkg</artifactId>
+    	<artifactId>drools-pkg-test</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
 
     	<properties>
@@ -24,7 +20,7 @@
 
     		<!-- Your rules dependent artifacts(Fact,Function,etc) -->
     		<dependency>
-    			<groupId>${project.groupId}</groupId>
+    			<groupId>org.mk300.example</groupId>
     			<artifactId>realtime-big-data-common</artifactId>
     			<version>1.0.0</version>
     		</dependency>
@@ -35,14 +31,15 @@
     		</dependency>
 
     	</dependencies>
-    	
-    	
+
+
     	<build>
+    		<defaultGoal>package</defaultGoal>
     		<plugins>
     			<plugin>
     				<groupId>org.mk300</groupId>
     				<artifactId>drools-pkg-maven-plugin</artifactId>
-    				<version>1.0.1</version>
+    				<version>1.0.2</version>
     				<dependencies>
     					<!-- BRMS artifacts used by rule compiling and generating pkg -->
     					<dependency>
@@ -79,6 +76,26 @@
     					</execution>
     				</executions>
     			</plugin>
+    			<plugin>
+    				<artifactId>maven-jar-plugin</artifactId>
+    				<version>2.3.1</version>
+    				<executions>
+    					<execution>
+    						<id>default-jar</id>
+    						<phase>none</phase>
+    					</execution>
+    				</executions>
+    			</plugin>
+    			<plugin>
+    				<artifactId>maven-install-plugin</artifactId>
+    				<version>2.3.1</version>
+    				<executions>
+    					<execution>
+    						<id>default-install</id>
+    						<phase>none</phase>
+    					</execution>
+    				</executions>
+    			</plugin>
     		</plugins>
     	</build>
 
@@ -97,4 +114,19 @@
     			</snapshots>
     		</repository>
     	</repositories>
+    	<pluginRepositories>
+    		<pluginRepository>
+    			<id>jboss-ga-plugin-repository</id>
+    			<url>https://maven.repository.redhat.com/techpreview/all</url>
+    			<layout>default</layout>
+    			<releases>
+    				<enabled>true</enabled>
+    				<updatePolicy>never</updatePolicy>
+    			</releases>
+    			<snapshots>
+    				<enabled>false</enabled>
+    				<updatePolicy>never</updatePolicy>
+    			</snapshots>
+    		</pluginRepository>
+    	</pluginRepositories>
     </project>
