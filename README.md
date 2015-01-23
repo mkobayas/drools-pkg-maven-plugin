@@ -1,0 +1,1 @@
+# drools-pkg-maven-plugin
