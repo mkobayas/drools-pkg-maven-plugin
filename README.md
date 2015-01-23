@@ -26,7 +26,7 @@
     		<dependency>
     			<groupId>${project.groupId}</groupId>
     			<artifactId>realtime-big-data-common</artifactId>
-    			<version>1.0.1</version>
+    			<version>1.0.0</version>
     		</dependency>
     		<dependency>
     			<groupId>org.jboss.logging</groupId>
@@ -42,7 +42,7 @@
     			<plugin>
     				<groupId>org.mk300</groupId>
     				<artifactId>drools-pkg-maven-plugin</artifactId>
-    				<version>1.0.0</version>
+    				<version>1.0.1</version>
     				<dependencies>
     					<!-- BRMS artifacts used by rule compiling and generating pkg -->
     					<dependency>
