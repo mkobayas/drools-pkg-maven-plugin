@@ -39,7 +39,7 @@
     			<plugin>
     				<groupId>org.mk300</groupId>
     				<artifactId>drools-pkg-maven-plugin</artifactId>
-    				<version>1.0.2</version>
+    				<version>1.0.3</version>
     				<dependencies>
     					<!-- BRMS artifacts used by rule compiling and generating pkg -->
     					<dependency>

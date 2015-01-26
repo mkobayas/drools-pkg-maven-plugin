@@ -63,7 +63,7 @@ public class PkgBuilderMojo extends AbstractMojo {
 	/**
 	 * The directory for rules base dir.
 	 * 
-	 * @parameter expression="${drools-pkg.ruleBaseDir}" default-value="src/main/resources"
+	 * @parameter expression="${drools-pkg.ruleBaseDir}" default-value="${project.basedir}/src/main/resources"
 	 */
 	private String ruleBaseDir;
 
