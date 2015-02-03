@@ -49,6 +49,7 @@ import org.kie.api.runtime.KieContainer;
  * 
  * @goal drools-pkg
  * @requiresDependencyResolution compile+runtime
+ * @threadSafe
  * @author mkobayas@redhat.com
  */
 public class PkgBuilderMojo extends AbstractMojo {
@@ -56,7 +57,7 @@ public class PkgBuilderMojo extends AbstractMojo {
 	private static String pomTemplete = "<project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd'>"
 			+ "<modelVersion>4.0.0</modelVersion>"
 			+ "<groupId>tmp</groupId>"
-			+ "<artifactId>tmp</artifactId>"
+			+ "<artifactId>ARTIFACT</artifactId>"
 			+ "<version>1</version>"
 			+ "</project>";
 	
@@ -122,7 +123,7 @@ public class PkgBuilderMojo extends AbstractMojo {
 			
 			getLog().info("Output to " + outputFile);
 		} catch (IOException e) {
-			throw new MojoExecutionException("hogeee", e);
+			throw new MojoExecutionException("rule build error", e);
 		} finally {
 			if(fos != null) {
 				try {
@@ -144,7 +145,8 @@ public class PkgBuilderMojo extends AbstractMojo {
 		File ruleBaseDirFile = new File(ruleBaseDir);
 		writeAllRule(kfs, ruleBaseDirFile);
 
-		kfs.writePomXML(pomTemplete);
+		String artifactId = "rule-t" + Thread.currentThread().getId();
+		kfs.writePomXML(pomTemplete.replace("ARTIFACT", artifactId));
 
 		KieBuilder kieBuilder = kieServices.newKieBuilder(kfs).buildAll();
 		if (kieBuilder.getResults().getMessages(Level.WARNING).size() > 0) {
@@ -155,7 +157,7 @@ public class PkgBuilderMojo extends AbstractMojo {
 			throw new MojoExecutionException("ERROR");
 		}
 
-		ReleaseId releaseId = kieServices.newReleaseId("tmp", "tmp", "1");
+		ReleaseId releaseId = kieServices.newReleaseId("tmp", artifactId, "1");
 		KieContainer kieContainer = kieServices.newKieContainer(releaseId);
 
 		kieServices.getRepository().removeKieModule(releaseId);
@@ -266,6 +268,7 @@ public class PkgBuilderMojo extends AbstractMojo {
 	    ClassLoader mavenClassLoader = pluginClassLoader.getParent();
 	    ClassLoader projectClassLoader =
 	        new URLClassLoader(projectClasspathList.toArray(new URL[projectClasspathList.size()]), mavenClassLoader);
+	    
 	    return projectClassLoader;
 	}
 }

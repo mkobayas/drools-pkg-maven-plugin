@@ -4,7 +4,7 @@
 
 	<groupId>org.mk300</groupId>
 	<artifactId>drools-pkg-maven-plugin</artifactId>
-	<version>1.0.3</version>
+	<version>1.0.4</version>
 
 	<packaging>maven-plugin</packaging>
 
