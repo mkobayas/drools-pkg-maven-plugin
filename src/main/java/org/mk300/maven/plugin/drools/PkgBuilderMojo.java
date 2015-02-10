@@ -91,6 +91,15 @@ public class PkgBuilderMojo extends AbstractMojo {
      */
     private String encoding;
     
+
+	
+	/**
+     * isolate classloader
+     *
+     * @parameter default-value="false"
+     */
+    private boolean isolateClassLoader;
+    
     /**
      * The Maven project.
      *
@@ -266,8 +275,13 @@ public class PkgBuilderMojo extends AbstractMojo {
 	    }
 	    ClassLoader pluginClassLoader = getClass().getClassLoader();
 	    ClassLoader mavenClassLoader = pluginClassLoader.getParent();
-	    ClassLoader projectClassLoader =
-	        new URLClassLoader(projectClasspathList.toArray(new URL[projectClasspathList.size()]), mavenClassLoader);
+	    ClassLoader projectClassLoader;
+	    
+	    if(isolateClassLoader) {
+	    	projectClassLoader = new URLClassLoader(projectClasspathList.toArray(new URL[projectClasspathList.size()]), mavenClassLoader);
+	    } else {
+	    	projectClassLoader = new URLClassLoader(projectClasspathList.toArray(new URL[projectClasspathList.size()]), pluginClassLoader);
+	    }
 	    
 	    return projectClassLoader;
 	}
