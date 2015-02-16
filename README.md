@@ -1,3 +1,6 @@
+This plugin is not thread-safe.
+
+
     <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     	<modelVersion>4.0.0</modelVersion>
@@ -39,7 +42,7 @@
     			<plugin>
     				<groupId>org.mk300</groupId>
     				<artifactId>drools-pkg-maven-plugin</artifactId>
-    				<version>1.0.5</version>
+    				<version>1.0.6</version>
     				<dependencies>
     					<!-- BRMS artifacts used by rule compiling and generating pkg -->
     					<dependency>

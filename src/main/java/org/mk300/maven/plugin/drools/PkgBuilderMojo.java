@@ -49,7 +49,6 @@ import org.kie.api.runtime.KieContainer;
  * 
  * @goal drools-pkg
  * @requiresDependencyResolution compile+runtime
- * @threadSafe
  * @author mkobayas@redhat.com
  */
 public class PkgBuilderMojo extends AbstractMojo {
