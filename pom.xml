@@ -4,7 +4,7 @@
 
 	<groupId>org.mk300</groupId>
 	<artifactId>drools-pkg-maven-plugin</artifactId>
-	<version>1.0.6</version>
+	<version>1.0.7</version>
 
 	<packaging>maven-plugin</packaging>
 
@@ -13,7 +13,7 @@
 
 	<description>
 		Generate Drools pkg file plugin.
-		This version is for Drools 6.1.x and BRMS 6.0.x
+		This version is for Drools 6.3.x - BRMS 6.0.x
 	</description>
 	
 	<developers>

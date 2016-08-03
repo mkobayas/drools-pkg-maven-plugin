@@ -205,7 +205,7 @@ public class PkgBuilderMojo extends AbstractMojo {
 			    }
 				br.close();
 
-				kfs.write("src/main/resources/" + fullPath, sb.toString());
+				kfs.write("src/main/resources/" + fullPath, sb.toString().getBytes());
 				getLog().info("Add rule file=" + fullPath + "(" + encoding + ")");
 			} else {
 				kfs.write("src/main/resources/" + fullPath, resource);
