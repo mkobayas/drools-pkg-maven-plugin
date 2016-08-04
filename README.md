@@ -134,6 +134,7 @@ This plugin is not thread-safe.
     	</pluginRepositories>
     </project>
 
+Use package
 
     public static void main(String[] args) throws Exception {
         
