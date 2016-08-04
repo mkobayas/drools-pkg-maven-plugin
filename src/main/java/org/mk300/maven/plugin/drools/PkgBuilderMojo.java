@@ -20,18 +20,24 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
+import org.drools.core.base.BaseClassFieldReader;
+import org.drools.core.base.ClassFieldAccessorStore;
+import org.drools.core.definitions.impl.KnowledgePackageImpl;
+import org.drools.core.spi.InternalReadAccessor;
 import org.drools.core.util.DroolsStreamUtils;
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieBuilder;
@@ -124,6 +130,48 @@ public class PkgBuilderMojo extends AbstractMojo {
 			Collection<KiePackage> pkgs = createKiePackage();
 			
 			logKBase(pkgs);
+			
+			// Avoid drools bug which introduced by DROOLS-944.
+			//  DROOLS-944 avoid NPE, but introduced another NPE in serialization of KiePackage.
+			//  Specific patterns in the DRL creates BaseClassFieldReader object which has null fieldType.
+			//---------------------------------------------
+			//import org.mk300.MyFunc;
+			//import org.mk300.MyPojo;
+			//
+			//global MyFunc myFunc
+			//
+			//rule "hoge"
+			//	when
+			//        $a : MyPojo( myFunc.toString(value) == "aaa")
+			//	then
+			//	   System.out.println($a);
+			//end
+			//---------------------------------------------
+			//  https://github.com/droolsjbpm/drools/blob/f0b787326ab94f22764843827b242c2ff3e3fe41/drools-core/src/main/java/org/drools/core/base/BaseClassFieldReader.java#L196
+			
+			try {
+	            for(KiePackage p : pkgs) {
+	                ClassFieldAccessorStore r = ((KnowledgePackageImpl)p).getClassFieldAccessorStore();
+	                Field f = r.getClass().getDeclaredField("lookup");
+	                f.setAccessible(true);
+	                @SuppressWarnings("rawtypes")
+					Map map = (Map)f.get(r);
+	                for(Object v : map.values()) {
+	                    if(v instanceof ClassFieldAccessorStore.FieldLookupEntry) {
+	                        ClassFieldAccessorStore.FieldLookupEntry mv = (ClassFieldAccessorStore.FieldLookupEntry)v;
+	                        InternalReadAccessor ir = mv.getClassFieldReader();
+	                        if(ir instanceof BaseClassFieldReader) {
+	                        	BaseClassFieldReader mr = (BaseClassFieldReader)ir;
+	                            if(mr.getExtractToClass() == null) {
+	                                mr.setFieldType(Object.class); // avoid serialization NPE.
+	                            }
+	                        }
+	                    }
+	                }
+	            }
+            } catch(Exception e) {
+            	throw new MojoExecutionException("Drools version mismatch", e);
+            }
 			
 			fos = new FileOutputStream(outputFile);
 			DroolsStreamUtils.streamOut(fos, pkgs);

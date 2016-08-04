@@ -12,7 +12,7 @@ This plugin is not thread-safe.
     	<properties>
 
     		<!-- BRMS version you choice -->
-    		<brms-version>6.0.3-redhat-6</brms-version>
+    		<brms-version>6.3.0.Final-redhat-5</brms-version>
 
     		<!-- Rule File encoding -->
     		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -42,7 +42,7 @@ This plugin is not thread-safe.
     			<plugin>
     				<groupId>org.mk300</groupId>
     				<artifactId>drools-pkg-maven-plugin</artifactId>
-    				<version>1.0.6</version>
+    				<version>2.0.1</version>
     				<dependencies>
     					<!-- BRMS artifacts used by rule compiling and generating pkg -->
     					<dependency>
@@ -105,7 +105,7 @@ This plugin is not thread-safe.
     	<repositories>
     		<repository>
     			<id>jboss-ga-repository</id>
-    			<url>https://maven.repository.redhat.com/techpreview/all</url>
+    			<url>https://maven.repository.redhat.com/ga</url>
     			<layout>default</layout>
     			<releases>
     				<enabled>true</enabled>
@@ -120,7 +120,7 @@ This plugin is not thread-safe.
     	<pluginRepositories>
     		<pluginRepository>
     			<id>jboss-ga-plugin-repository</id>
-    			<url>https://maven.repository.redhat.com/techpreview/all</url>
+    			<url>https://maven.repository.redhat.com/ga</url>
     			<layout>default</layout>
     			<releases>
     				<enabled>true</enabled>
@@ -133,3 +133,16 @@ This plugin is not thread-safe.
     		</pluginRepository>
     	</pluginRepositories>
     </project>
+
+
+    public static void main(String[] args) throws Exception {
+        
+        KieServices kieServices = KieServices.Factory.get();
+        KieBase kbase = new KieHelper().addResource(kieServices.getResources().newFileSystemResource("drools-pkg-test.pkg")).build();
+        
+        KieSession session = kbase.newKieSession();
+        
+        session.insert(new MyPojo());
+        session.fireAllRules();
+        session.dispose();
+    }
