@@ -105,6 +105,14 @@ public class PkgBuilderMojo extends AbstractMojo {
      */
     private boolean isolateClassLoader;
     
+
+    /**
+     * drools.dialect.mvel.strict
+     *
+     * @parameter default-value="false"
+     */
+    private boolean mvelStrictMode;
+    
     /**
      * The Maven project.
      *
@@ -125,6 +133,8 @@ public class PkgBuilderMojo extends AbstractMojo {
 		FileOutputStream fos = null;
 		try {
 			Thread.currentThread().setContextClassLoader(cl);
+			
+			System.setProperty("drools.dialect.mvel.strict", Boolean.toString(mvelStrictMode));
 			
 			File outputFile = new File(targetDir, pkgFileName);
 			Collection<KiePackage> pkgs = createKiePackage();
