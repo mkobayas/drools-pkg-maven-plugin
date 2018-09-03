@@ -39,10 +39,12 @@ import org.drools.core.base.ClassFieldAccessorStore;
 import org.drools.core.definitions.impl.KnowledgePackageImpl;
 import org.drools.core.spi.InternalReadAccessor;
 import org.drools.core.util.DroolsStreamUtils;
+import org.kie.api.KieBaseConfiguration;
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieFileSystem;
 import org.kie.api.builder.Message.Level;
+import org.kie.api.conf.EventProcessingOption;
 import org.kie.api.builder.ReleaseId;
 import org.kie.api.definition.KiePackage;
 import org.kie.api.definition.rule.Rule;
@@ -95,7 +97,13 @@ public class PkgBuilderMojo extends AbstractMojo {
      * @parameter expression="${drools-pkg.encoding}" default-value="${project.build.sourceEncoding}"
      */
     private String encoding;
-    
+
+    /**
+     * enable Event Processing Option STREAM.
+     *
+     * @parameter expression="${drools-pkg.stream}" default-value="false"
+     */
+    private boolean stream;
 
 	
 	/**
@@ -141,7 +149,7 @@ public class PkgBuilderMojo extends AbstractMojo {
 			
 			logKBase(pkgs);
 			
-			// Avoid drools bug which introduced by DROOLS-944.
+			// Avoid drools bug which introduced by DROOLS-944.(FIXED IN DROOLS-2517)
 			//  DROOLS-944 avoid NPE, but introduced another NPE in serialization of KiePackage.
 			//  Specific patterns in the DRL creates BaseClassFieldReader object which has null fieldType.
 			//---------------------------------------------
@@ -228,7 +236,13 @@ public class PkgBuilderMojo extends AbstractMojo {
 
 		kieServices.getRepository().removeKieModule(releaseId);
 		
-		return kieContainer.getKieBase().getKiePackages();
+		KieBaseConfiguration kconfig = kieServices.newKieBaseConfiguration();
+		if (stream) {
+		    kconfig.setOption(EventProcessingOption.STREAM);
+		} else {
+		    kconfig.setOption(EventProcessingOption.CLOUD);
+		}
+		return kieContainer.newKieBase(kconfig).getKiePackages();
 	}
 	
 	
