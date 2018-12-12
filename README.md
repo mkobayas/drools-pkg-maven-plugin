@@ -4,7 +4,7 @@ build rules and make binary package file(pkg).
 
 version 3.0.0 is for drools 7.11.x or RHDM 7.1.x.
 
-__ caution : Currently binary package file is not supported by RedHat. Please use this plugin at your own risk. __
+_caution : Currently binary package file is not supported by RedHat. Please use this plugin at your own risk._
 
 ## usage
 
